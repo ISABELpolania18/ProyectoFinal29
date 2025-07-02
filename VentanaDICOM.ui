@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Visualizador DICOM</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+
+   <!-- ScrollArea -->
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <layout class="QVBoxLayout" name="main_vertical_layout">
+
+       <!-- Corte Axial -->
+       <item>
+        <layout class="QVBoxLayout" name="layout_axial">
+         <item>
+          <widget class="QLabel">
+           <property name="text">
+            <string>Corte Axial</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="campo_grafico_axial" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>500</width>
+             <height>500</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="slider_axial">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Corte Coronal -->
+       <item>
+        <layout class="QVBoxLayout" name="layout_coronal">
+         <item>
+          <widget class="QLabel">
+           <property name="text">
+            <string>Corte Coronal</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="campo_grafico_coronal" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>500</width>
+             <height>500</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="slider_coronal">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Corte Sagital -->
+       <item>
+        <layout class="QVBoxLayout" name="layout_sagital">
+         <item>
+          <widget class="QLabel">
+           <property name="text">
+            <string>Corte Sagital</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="campo_grafico_sagital" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>500</width>
+             <height>500</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="slider_sagital">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Botón Cargar -->
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <spacer name="horizontalSpacerL">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="boton_cargar">
+           <property name="text">
+            <string>Cargar DICOM</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerR">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+
+      </layout>
+     </widget>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

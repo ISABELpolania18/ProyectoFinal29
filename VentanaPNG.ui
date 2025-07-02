@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VentanaPNG</class>
+ <widget class="QDialog" name="VentanaPNG">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Procesamiento de Imágenes PNG</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="widget_botones">
+     <layout class="QGridLayout" name="gridLayout_botones">
+      <!-- Combo para filtros -->
+      <item row="0" column="0" colspan="2">
+       <widget class="QComboBox" name="combo_filtros"/>
+      </item>
+
+      <!-- Entrada kernel -->
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_kernel">
+        <property name="text">
+         <string>Tamaño Kernel:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="entrada_kernel">
+        <property name="text">
+         <string>3</string>
+        </property>
+       </widget>
+      </item>
+
+      <!-- Botón aplicar -->
+      <item row="0" column="4">
+       <widget class="QPushButton" name="boton_aplicar">
+        <property name="text">
+         <string>Aplicar filtro</string>
+        </property>
+       </widget>
+      </item>
+
+      <!-- Botones cargar, guardar, volver -->
+      <item row="1" column="0">
+       <widget class="QPushButton" name="boton_cargar">
+        <property name="text">
+         <string>Cargar Imagen</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="boton_guardar">
+        <property name="text">
+         <string>Guardar Resultado</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="boton_volver">
+        <property name="text">
+         <string>Volver</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- Área para mostrar la imagen -->
+   <item>
+    <widget class="QWidget" name="campo_grafico">
+     <property name="minimumSize">
+      <size>
+       <width>600</width>
+       <height>400</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_grafico"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

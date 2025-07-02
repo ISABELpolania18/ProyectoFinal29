@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VentanaCSV</class>
+ <widget class="QMainWindow" name="VentanaCSV">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Graficador CSV</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+
+    <item>
+     <widget class="QPushButton" name="botonCargar">
+      <property name="text">
+       <string>Cargar CSV</string>
+      </property>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QPushButton" name="botonGuardar">
+      <property name="text">
+       <string>Guardar CSV en BD</string>
+      </property>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QComboBox" name="comboTipoGrafico"/>
+    </item>
+
+    <item>
+     <layout class="QHBoxLayout">
+      <item>
+       <widget class="QLabel" name="labelX">
+        <property name="text">
+         <string>X:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboColumnaX"/>
+      </item>
+     </layout>
+    </item>
+
+    <item>
+     <layout class="QHBoxLayout">
+      <item>
+       <widget class="QLabel" name="labelY">
+        <property name="text">
+         <string>Y:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboColumnaY"/>
+      </item>
+     </layout>
+    </item>
+
+    <item>
+     <widget class="QPushButton" name="botonGraficar">
+      <property name="text">
+       <string>Graficar</string>
+      </property>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QPushButton" name="botonEstadisticas">
+      <property name="text">
+       <string>Estadísticas</string>
+      </property>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QTableWidget" name="tablaDatos"/>
+    </item>
+
+    <item>
+     <widget class="QWidget" name="widgetGrafica">
+      <layout class="QVBoxLayout" name="layoutGrafica"/>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QPushButton" name="botonVolver">
+      <property name="text">
+       <string>Volver</string>
+      </property>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
