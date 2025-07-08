@@ -27,8 +27,14 @@ class Controlador:
         
         else:
             QMessageBox.warning(self.vista, "Error", "Usuario o contraseña incorrectos.")
+    
+    def agregar_usuario(self, nombre_usuario, contrasena, rol, ventana):
+        self.modelo.anadir_usuario(nombre_usuario, contrasena, rol)
+        QMessageBox.information(ventana, "Éxito", "Usuario agregado correctamente.")
+        ventana.close()
+        self.vista.show()  # Muestra la ventana principal nuevamente
         
-
+        
     
 def main():
     app = QApplication(sys.argv)

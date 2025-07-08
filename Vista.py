@@ -27,15 +27,40 @@ class VentanaPrincipal(QMainWindow):
         self.setup()
 
     def setup(self):
-        # Aquí se conectan los widgets directamente como ud quiere
         self.Boton_Ingresar.clicked.connect(self.ingresar)
+        self.Boton_Agregar.clicked.connect(self.abrir_ventana_agregar_usuario)
 
     def ingresar(self):
         usuario = self.Usuario.text()
         contrasena = self.Contrasena.text()
         self.__mensajero.verificar_login(usuario, contrasena)
+
+    def abrir_ventana_agregar_usuario(self):
+        self.ventanaAgregarUsuario = ventanaAgregarUsuario(self) #el self indica que su ventana padre es esta ventanaPrincipal
+        self.ventanaAgregarUsuario.asignarCoordinador(self.__mensajero)
+        self.hide()
+        self.ventanaAgregarUsuario.show()  # Muestra la ventana de agregar usuario
         
     def asignarCoordinador(self,c):
+        self.__mensajero = c
+class ventanaAgregarUsuario(QDialog):
+    def __init__(self, parent=None):
+        super().__init__()
+        loadUi('nuevo.ui', self)
+        self.__mi_ventana_principal = parent
+        self.setup()
+
+    def setup(self):
+        self.Aceptar.clicked.connect(self.Agregar_Usuario)
+    
+
+    def Agregar_Usuario(self):
+        nuevo_usuario = self.Nuevo_Usuario.text()
+        nueva_contrasena = self.Nueva_Contrasena.text()
+        rol = self.Rol.currentText() #porque es un combo box
+        self.__mensajero.agregar_usuario(nuevo_usuario, nueva_contrasena, rol,self) #self es para que sepa que es la ventana de agregar usuario
+
+    def asignarCoordinador(self, c):
         self.__mensajero = c
         
 
@@ -52,8 +77,9 @@ class ventana_Senales(QDialog):
         
     
     def abrir_ventana_csv(self):
-        self.ventanaCSV = VentanaCSV(self)
-        self.ventanaCSV.asignarCoordinador(self.__mensajero)
+        self.ventanaCSV = VentanaCSV(self) #ese self indica que su ventana padre es la ventanaCSV
+        #Se va a usar la estrategia de decirle al amigo (nueva ventana) que el mesero es ese mensajero(coordinador)
+        self.ventanaCSV.asignarCoordinador(self.__mensajero) 
         self.hide()  # Oculta la ventana de señales
         self.ventanaCSV.show()  # Muestra la ventana de CSV
     

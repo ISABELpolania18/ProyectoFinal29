@@ -20,20 +20,10 @@
       <x>60</x>
       <y>50</y>
       <width>301</width>
-      <height>221</height>
+      <height>161</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="Contrasena"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Usuario: </string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="2">
       <widget class="QLineEdit" name="Usuario"/>
      </item>
@@ -44,10 +34,39 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="0" column="1">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Usuario: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="Contrasena"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>230</y>
+      <width>301</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
       <widget class="QPushButton" name="Boton_Ingresar">
        <property name="text">
         <string>Ingresar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Boton_Agregar">
+       <property name="text">
+        <string>Agregar usuario</string>
        </property>
       </widget>
      </item>

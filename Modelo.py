@@ -21,6 +21,13 @@ class Login:
         buscar = "SELECT * FROM usuarios WHERE nombre_usuario = %s AND Contraseña = %s"
         self.cursor.execute(buscar, (usuario, contrasena))
         return self.cursor.fetchone() # Devuelve una tupla con los datos del usuario si existe, o None si no existe
+    
+    def anadir_usuario(self, nombre_usuario, contrasena, rol):
+        insertar = "INSERT INTO usuarios (nombre_usuario, Contraseña, Tipo_Usuario) VALUES (%s, %s, %s)"
+        self.cursor.execute(insertar, (nombre_usuario, contrasena, rol))
+        self.conexion.commit()
+    
+
 
 class CSV:
     def __init__(self, ruta=None):
