@@ -6,29 +6,46 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>439</width>
-    <height>413</height>
+    <width>495</width>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(253, 247, 239);
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>50</y>
-      <width>301</width>
+      <x>80</x>
+      <y>150</y>
+      <width>321</width>
       <height>161</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="2">
-      <widget class="QLineEdit" name="Usuario"/>
+      <widget class="QLineEdit" name="Usuario">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed Extra Bold</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Contraseña</string>
        </property>
@@ -36,28 +53,50 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed Extra Bold</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Usuario: </string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLineEdit" name="Contrasena"/>
+      <widget class="QLineEdit" name="Contrasena">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>230</y>
-      <width>301</width>
+      <x>80</x>
+      <y>310</y>
+      <width>321</width>
       <height>80</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="Boton_Ingresar">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 195, 231);</string>
+       </property>
        <property name="text">
         <string>Ingresar</string>
        </property>
@@ -65,6 +104,15 @@
      </item>
      <item>
       <widget class="QPushButton" name="Boton_Agregar">
+       <property name="font">
+        <font>
+         <family>Tw Cen MT Condensed</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(230, 195, 231);</string>
+       </property>
        <property name="text">
         <string>Agregar usuario</string>
        </property>
@@ -72,13 +120,32 @@
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>0</y>
+      <width>321</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../../../../../../../Downloads/image-removebg-preview (2).png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>439</width>
+     <width>495</width>
      <height>26</height>
     </rect>
    </property>

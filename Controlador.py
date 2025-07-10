@@ -7,7 +7,7 @@ class Controlador:
         self.modelo = modelo
 
     def verificar_login(self, usuario, contrasena):
-        datos = self.modelo.validar_usuario(usuario, contrasena)
+        datos = self.modelo.validar_usuario(usuario, contrasena) 
         if datos:
             msg = QMessageBox(self.vista)
             msg.setIcon(QMessageBox.Information)
@@ -33,7 +33,6 @@ class Controlador:
         QMessageBox.information(ventana, "Éxito", "Usuario agregado correctamente.")
         ventana.close()
         self.vista.show()  # Muestra la ventana principal nuevamente
-        
         
     
 def main():

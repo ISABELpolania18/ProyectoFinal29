@@ -6,6 +6,7 @@ import cv2
 import dicom2nifti
 import pandas as pd 
 import numpy as np
+import scipy.io as sio
 
 class Login:
     def __init__(self):
@@ -92,4 +93,131 @@ class ImagenesNormales:
     # Avanzados
     def bordes(self, Img):
         return cv2.Canny(Img, 100, 200)
+
+class DICOM:
+    def __init__(self, c, m):
+        self.__carpeta = c
+        self.__mensajero = m
+        self.__volumen = None
+        self.__slices = []
+        self.__ruta_nifti = None
+        self.__datos_paciente = {}
+
+        if self.__carpeta:  
+            self.cargar_dicom()
+
+    def cargar_dicom(self):
+        archivos = [f for f in os.listdir(self.__carpeta) if f.endswith('.dcm')]
+        self.__slices = [pydicom.dcmread(os.path.join(self.__carpeta, f)) for f in archivos]
+        self.__slices.sort(key=lambda x: int(x.InstanceNumber))
+        self.__volumen = np.stack([d.pixel_array for d in self.__slices])
+
+        #metadatos
+        paciente = self.__slices[0]
+        self.__datos_paciente = {
+            "usuario": self.__mensajero.vista.Usuario.text() if self.__mensajero else "Desconocido",
+            "cod_archivo": 123,  # aca no se si poner enseguida lo del usuario o generar otro
+            "nombre": str(paciente.get('PatientName', 'Anónimo')),
+            "id": str(paciente.get('PatientID', '0')),
+            "edad": str(paciente.get('PatientAge', 'NA')),
+            "ruta_dicom": self.__carpeta
+        }
+        
+        self.__ruta_nifti = self.convertir_nifti() #convierte carpeta a NIFTI
+
+    def convertir_nifti(self):
+        from pathlib import Path
+        nifti_ = str(Path(self.__carpeta).parent / "convertido_nifti")
+        os.makedirs(nifti_, exist_ok=True)
+
+        dicom2nifti.convert_directory(self.__carpeta, nifti_)
+        return nifti_ 
+    
+    def guardar_bd(self,cursor,conexion):
+        consulta = """
+            INSERT INTO archivos_medicos 
+            (nombre_usuario, cod_archivo, Nombre_Paciente, ID_Paciente, Edad_Paciente, Ruta_Dicom,Ruta_Nifti)
+            VALUES (%s, %s, %s, %s, %s, %s,%s)
+            """
+        datos = (
+            self.__datos_paciente["usuario"],
+            self.__datos_paciente["cod_archivo"],
+            self.__datos_paciente["nombre"],
+            self.__datos_paciente["id"],
+            self.__datos_paciente["edad"],
+            self.__datos_paciente["ruta_dicom"],
+            self.__ruta_nifti
+        )
+        cursor.execute(consulta, datos)
+        conexion.commit()
+
+    def get_volumen(self):
+        return self.__volumen
+
+    def get_slices(self):
+        return self.__slices
+
+    def get_ruta_nifti(self):
+        return self.__ruta_nifti
+
+    def get_datos_paciente(self):
+        return self.__datos_paciente
+
+class MAT:
+    def __init__(self):
+        self.datos_senales = {}
+        self.senal_actual = None
+        self.nombre_usuario = ""
+        self.cod_archivo = None
+        self.nombre_archivo = ""
+        self.ruta_archivo = ""
+
+    def cargar_archivo(self, ruta):
+        mat = sio.loadmat(ruta)
+        self.datos_senales = {
+            k: v.flatten()
+            for k, v in mat.items()
+            if isinstance(v, np.ndarray) and v.ndim == 2
+        }
+        self.cod_archivo = np.random.randint(1000, 99999)
+        self.nombre_archivo = os.path.basename(ruta)
+        self.ruta_archivo = ruta
+        return list(self.datos_senales.keys())
+
+    def seleccionar_senal(self, nombre):
+        self.senal_actual = self.datos_senales.get(nombre, None)
+        return self.senal_actual
+
+    def aplicar_filtro(self, tipo):
+        if self.senal_actual is None:
+            return None
+
+        if tipo == "Media Móvil":
+            ventana = 5
+            return np.convolve(self.senal_actual, np.ones(ventana)/ventana, mode='valid')
+        elif tipo == "Mediana":
+            return pd.Series(self.senal_actual).rolling(window=5).median().dropna().values
+        return None
+
+    def guardar_en_bd(self, cursor, conexion, nombre_usuario):
+        try:
+            consulta = """
+                INSERT INTO archivos_otros 
+                (nombre_usuario, cod_archivo, tipo_archivo, nombre_archivo, fecha_archivo, ruta_archivo)
+                VALUES (%s, %s, %s, %s, CURDATE(), %s)
+            """
+            datos = (
+                nombre_usuario,
+                self.cod_archivo,
+                'mat',
+                self.nombre_archivo,
+                self.ruta_archivo
+            )
+            print("Datos a guardar:", datos) 
+            cursor.execute(consulta, datos)
+            conexion.commit()
+            print("Guardado exitosamente en BD.")
+        except Exception as e:
+            print("Error al guardar en la base de datos:", e)
+            raise
     

@@ -14,21 +14,83 @@
    <string>Visualizador DICOM</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
-
-   <!-- ScrollArea -->
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(253, 247, 239);</string>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
      <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>-1096</y>
+        <width>755</width>
+        <height>1772</height>
+       </rect>
+      </property>
       <layout class="QVBoxLayout" name="main_vertical_layout">
-
-       <!-- Corte Axial -->
+       <item>
+        <layout class="QHBoxLayout" name="top_buttons_layout">
+         <item>
+          <widget class="QPushButton" name="boton_cargar">
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(220, 187, 221);</string>
+           </property>
+           <property name="text">
+            <string>Cargar DICOM</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="expandingSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="boton_volver">
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(220, 187, 221);</string>
+           </property>
+           <property name="text">
+            <string>Volver</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <layout class="QVBoxLayout" name="layout_axial">
          <item>
-          <widget class="QLabel">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>Corte Axial</string>
            </property>
@@ -45,6 +107,12 @@
              <height>500</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
           </widget>
          </item>
          <item>
@@ -56,12 +124,16 @@
          </item>
         </layout>
        </item>
-
-       <!-- Corte Coronal -->
        <item>
         <layout class="QVBoxLayout" name="layout_coronal">
          <item>
-          <widget class="QLabel">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>Corte Coronal</string>
            </property>
@@ -78,6 +150,12 @@
              <height>500</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
           </widget>
          </item>
          <item>
@@ -89,12 +167,16 @@
          </item>
         </layout>
        </item>
-
-       <!-- Corte Sagital -->
        <item>
         <layout class="QVBoxLayout" name="layout_sagital">
          <item>
-          <widget class="QLabel">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>Corte Sagital</string>
            </property>
@@ -111,6 +193,12 @@
              <height>500</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>Tw Cen MT Condensed</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
           </widget>
          </item>
          <item>
@@ -122,51 +210,10 @@
          </item>
         </layout>
        </item>
-
-       <!-- Botón Cargar -->
-       <item>
-        <layout class="QHBoxLayout">
-         <item>
-          <spacer name="horizontalSpacerL">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="boton_cargar">
-           <property name="text">
-            <string>Cargar DICOM</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacerR">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-
       </layout>
      </widget>
     </widget>
    </item>
-
   </layout>
  </widget>
  <resources/>

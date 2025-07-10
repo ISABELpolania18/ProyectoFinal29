@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>334</height>
+    <width>423</width>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(253, 247, 239);</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -25,6 +28,17 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QPushButton" name="botonPNG">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed Extra Bold</family>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Manipular PNG y JPG</string>
       </property>
@@ -32,6 +46,17 @@
     </item>
     <item>
      <widget class="QPushButton" name="botonDicom">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed Extra Bold</family>
+        <pointsize>14</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Manipular DICOM y Nifti</string>
       </property>

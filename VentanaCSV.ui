@@ -6,100 +6,175 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>600</height>
+    <width>797</width>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Graficador CSV</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(253, 247, 239);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-
     <item>
      <widget class="QPushButton" name="botonCargar">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Cargar CSV</string>
       </property>
      </widget>
     </item>
-
     <item>
      <widget class="QPushButton" name="botonGuardar">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Guardar CSV en BD</string>
       </property>
      </widget>
     </item>
-
     <item>
-     <widget class="QComboBox" name="comboTipoGrafico"/>
+     <widget class="QComboBox" name="comboTipoGrafico">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
-
     <item>
      <layout class="QHBoxLayout">
       <item>
        <widget class="QLabel" name="labelX">
+        <property name="font">
+         <font>
+          <family>Tw Cen MT Condensed Extra Bold</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>X:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboColumnaX"/>
+       <widget class="QComboBox" name="comboColumnaX">
+        <property name="font">
+         <font>
+          <family>Tw Cen MT Condensed</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
-
     <item>
      <layout class="QHBoxLayout">
       <item>
        <widget class="QLabel" name="labelY">
+        <property name="font">
+         <font>
+          <family>Tw Cen MT Condensed Extra Bold</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Y:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboColumnaY"/>
+       <widget class="QComboBox" name="comboColumnaY">
+        <property name="font">
+         <font>
+          <family>Tw Cen MT Condensed</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
-
     <item>
      <widget class="QPushButton" name="botonGraficar">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Graficar</string>
       </property>
      </widget>
     </item>
-
     <item>
      <widget class="QPushButton" name="botonEstadisticas">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Estadísticas</string>
       </property>
      </widget>
     </item>
-
     <item>
-     <widget class="QTableWidget" name="tablaDatos"/>
-    </item>
-
-    <item>
-     <widget class="QWidget" name="widgetGrafica">
-      <layout class="QVBoxLayout" name="layoutGrafica"/>
+     <widget class="QTableWidget" name="tablaDatos">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
      </widget>
     </item>
-
+    <item>
+     <layout class="QVBoxLayout" name="layoutGrafica"/>
+    </item>
     <item>
      <widget class="QPushButton" name="botonVolver">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Volver</string>
       </property>
      </widget>
     </item>
-
    </layout>
   </widget>
  </widget>

@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>338</height>
+    <width>422</width>
+    <height>343</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(253, 247, 239);</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -25,6 +28,15 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QPushButton" name="botonCSV">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed Extra Bold</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Manipular archivos CSV</string>
       </property>
@@ -32,6 +44,15 @@
     </item>
     <item>
      <widget class="QPushButton" name="botonMAT">
+      <property name="font">
+       <font>
+        <family>Tw Cen MT Condensed Extra Bold</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(220, 187, 221);</string>
+      </property>
       <property name="text">
        <string>Manipular archivos MAT</string>
       </property>

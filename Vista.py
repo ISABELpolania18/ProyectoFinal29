@@ -1,4 +1,4 @@
-from Modelo import CSV, ImagenesNormales, Login
+from Modelo import CSV, ImagenesNormales, Login, DICOM, MAT
 import sys
 #QFileDialog que es una ventana para abrir/guardar archivos
 #QVBoxLayout es un organizador de widget en la ventana, este en particular los apila en vertical
@@ -118,8 +118,6 @@ class ventana_Imagenes(QDialog):
     def asignarCoordinador(self, c):
         self.__mensajero = c
         
-
-
 
 class VentanaCSV(QMainWindow):
     def __init__(self, parent=None):
@@ -264,7 +262,8 @@ class VentanaCSV(QMainWindow):
         self.__mensajero = c
 
     def volver_a_senales(self):
-        self.close()
+        #se oculta la ventana actual y se muestra la ventana principal
+        self.close() #no se va a volver a mostrar la ventana de CSV por eso se cierra completamente
         self.__ventana_principal.show()
 
 
@@ -273,11 +272,110 @@ class Ventana_MAT(QDialog):
         super().__init__(parent)
         loadUi('VentanaMAT.ui', self)
         self.__ventana_principal = parent
+        self.mat = MAT()
         self.setup()
+        
+
     def setup(self):
-        pass
+        self.botonCargarMAT.clicked.connect(self.cargar_archivo_mat)
+        self.comboSenales.currentIndexChanged.connect(self.actualizar_grafica)
+        self.botonFiltrar.clicked.connect(self.aplicar_filtro)
+        self.botonGuardar.clicked.connect(self.guardar_bd)
+        self.botonVolver.clicked.connect(self.volver)
+
+        self.canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.layout_grafico.addWidget(self.canvas)
+        self.ax = self.canvas.figure.subplots()
+
     def asignarCoordinador(self, c):
         self.__mensajero = c
+
+    def cargar_archivo_mat(self):
+        ruta, _ = QFileDialog.getOpenFileName(self, "Cargar archivo .mat", "", "Archivos .mat (*.mat)")
+        if ruta:
+            try:
+                señales = self.mat.cargar_archivo(ruta)
+                self.comboSenales.clear()
+                self.comboSenales.addItems(señales)
+                if señales:
+                    array = self.mat.datos_senales[señales[0]]
+                    if isinstance(array, np.ndarray) and array.ndim == 2:
+                        self.canalInicio.setMaximum(array.shape[0] - 1)
+                        self.canalFin.setMaximum(array.shape[0] - 1)
+
+                self.mat.nombre_usuario = self.__mensajero.vista.Usuario.text()
+                QMessageBox.information(self, "Éxito", "Archivo cargado correctamente.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"No se pudo cargar el archivo: {e}")
+
+    def actualizar_grafica(self):
+        nombre = self.comboSenales.currentText()
+        senal = self.mat.datos_senales.get(nombre, None)
+
+        if senal is None or not isinstance(senal, np.ndarray):
+            QMessageBox.warning(self, "Error", "La llave seleccionada no contiene un arreglo válido.")
+            return
+
+        self.ax.clear()
+
+        if senal.ndim == 1:
+            self.ax.plot(senal, label="Señal 1D")
+            self.ax.set_title(f"Señal: {nombre}")
+            self.ax.set_xlabel("Muestras")
+            self.ax.set_ylabel("Amplitud")
+            self.ax.legend()
+            self.canvas.draw()
+
+        elif senal.ndim == 2:
+            inicio = self.canalInicio.value()
+            fin = self.canalFin.value()
+
+            if inicio < 0 or fin >= senal.shape[0] or inicio > fin:
+                QMessageBox.warning(self, "Error", f"Rango inválido. El arreglo tiene {senal.shape[0]} canales.")
+                return
+
+            for i in range(inicio, fin + 1):
+                self.ax.plot(senal[i], label=f"Canal {i}")
+
+            self.ax.set_title(f"Señales de '{nombre}' (canales {inicio}-{fin})")
+            self.ax.set_xlabel("Muestras")
+            self.ax.set_ylabel("Amplitud")
+            self.ax.legend()
+            self.canvas.draw()
+
+        else:
+            QMessageBox.warning(self, "Error", "El arreglo tiene más de 2 dimensiones. No se puede graficar.")
+
+
+    def aplicar_filtro(self):
+        tipo = self.comboFiltro.currentText()
+        filtrada = self.mat.aplicar_filtro(tipo)
+
+        if filtrada is None:
+            QMessageBox.warning(self, "Error", "No hay señal cargada o filtro no válido.")
+            return
+
+        self.ax.clear()
+        self.ax.plot(self.mat.senal_actual, label="Original", alpha=0.5)
+        self.ax.plot(filtrada, label="Filtrada", color="red")
+        self.ax.set_title("Señal filtrada")
+        self.ax.legend()
+        self.canvas.draw()
+
+    def guardar_bd(self):
+        try:
+            self.mat.guardar_en_bd(
+                self.__mensajero.modelo.cursor,
+                self.__mensajero.modelo.conexion,
+                self.__mensajero.vista.Usuario.text()
+            )
+            QMessageBox.information(self, "Éxito", "Archivo .mat guardado en la base de datos.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo guardar en la base de datos: {e}")
+
+    def volver(self):
+        self.close()
+        self.__ventana_principal.show()
 
 class MyDicomCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -330,11 +428,17 @@ class Ventana_DICOM(QDialog):
         self.layout_sagital.addWidget(self.canvas_sagital)
 
         self.boton_cargar.clicked.connect(self.cargar_dicom)
+        self.boton_volver.clicked.connect(self.volver)
 
-        # Conectar sliders( actualizar cortes)
+        # actualizar cortes
         self.slider_axial.valueChanged.connect(self.actualizar_axial)
         self.slider_coronal.valueChanged.connect(self.actualizar_coronal)
         self.slider_sagital.valueChanged.connect(self.actualizar_sagital)
+
+    def volver(self):
+        self.close()
+        self.__ventana_principal.show()
+
 
     def asignarCoordinador(self, c):
         self.__mensajero = c
@@ -342,82 +446,20 @@ class Ventana_DICOM(QDialog):
     def cargar_dicom(self):
         carpeta = QFileDialog.getExistingDirectory(self, "Seleccionar carpeta")
         if carpeta:
-            archivos = [f for f in os.listdir(carpeta) if f.endswith('.dcm')]
+            self.dicom = DICOM(carpeta, self.__mensajero)
+            self.volumen3D = self.dicom.get_volumen()
 
-            #ordenar slices
-            slices = []
-            for archivo in archivos:
-                path = os.path.join(carpeta, archivo)
-                ds = pydicom.dcmread(path)
-                slices.append(ds)
+            self.slider_axial.setMaximum(self.volumen3D.shape[0] - 1)
+            self.slider_coronal.setMaximum(self.volumen3D.shape[1] - 1)
+            self.slider_sagital.setMaximum(self.volumen3D.shape[2] - 1)
 
-            slices.sort(key=lambda x: int(x.InstanceNumber))  
+            self.slider_axial.setValue(self.volumen3D.shape[0] // 2)
+            self.slider_coronal.setValue(self.volumen3D.shape[1] // 2)
+            self.slider_sagital.setValue(self.volumen3D.shape[2] // 2)
 
-            #volumen
-            volumen = np.stack([d.pixel_array for d in slices])
-            self.volumen3D = volumen  
-
-            #metadatos
-            cod=123
-            nombre = str(slices[0].get('PatientName', 'Anónimo'))
-            id_= str(slices[0].get('PatientID', '0'))
-            edad = str(slices[0].get('PatientAge', 'NA'))
-            ruta = carpeta 
-
-            self.nombre_usuario = self.__mensajero.vista.Usuario.text()
-            self.cod = cod
-            self.nombre_paciente = nombre
-            self.id_paciente = id_
-            self.edad_paciente = edad
-            self.ruta_dicom = ruta
-             
-
-
-            #Navegar en indices de cortes
-            self.slider_axial.setMaximum(volumen.shape[0] - 1)
-            self.slider_coronal.setMaximum(volumen.shape[1] - 1)
-            self.slider_sagital.setMaximum(volumen.shape[2] - 1)
-
-            #corte para mostrar
-            self.slider_axial.setValue(volumen.shape[0] // 2)
-            self.slider_coronal.setValue(volumen.shape[1] // 2)
-            self.slider_sagital.setValue(volumen.shape[2] // 2)
-
-            ruta_nifti = self.convertir_nifti(ruta) #convierte carpeta a NIFTI
-            self.guardar_bd(ruta_nifti)
-
-    def convertir_nifti(self, carpeta):
-        from pathlib import Path
-        nifti_ = str(Path(carpeta).parent / "convertido_nifti")
-        os.makedirs(nifti_, exist_ok=True)
-
-        dicom2nifti.convert_directory(carpeta, nifti_)
-        return nifti_ 
-        
-    def guardar_bd(self,ruta_nifti):
-        consulta = """
-            INSERT INTO archivos_medicos 
-            (nombre_usuario, cod_archivo, Nombre_Paciente, ID_Paciente, Edad_Paciente, Ruta_Dicom,Ruta_Nifti)
-            VALUES (%s, %s, %s, %s, %s, %s,%s)
-            """
-     
-        cursor = self.__mensajero.modelo.cursor
-
-        datos = (
-            self.nombre_usuario,
-            self.cod,
-            self.nombre_paciente,
-            self.id_paciente,
-            self.edad_paciente,
-            self.ruta_dicom,
-            ruta_nifti
-        )
-
-        cursor.execute(consulta, datos)
-        self.__mensajero.modelo.conexion.commit()
-        QMessageBox.information(self,"Exito","Datos guardados en la base de datos")
-        
-
+            self.dicom.guardar_bd(self.__mensajero.modelo.cursor, self.__mensajero.modelo.conexion)
+            QMessageBox.information(self, "Éxito", "Datos guardados en base de datos")
+               
 class MyGraphCanvas(FigureCanvas):
     def __init__(self, width=5, height=4, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
@@ -444,7 +486,7 @@ class Ventana_PNG(QDialog):
         self.img_gray = None
         self.img_resultado = None
         self.canvas = MyGraphCanvas()
-        self.campo_grafico.layout().addWidget(self.canvas)
+        self.verticalLayout_grafico.addWidget(self.canvas)
 
         # Añadir filtros al combo
         filtros = [
