@@ -38,7 +38,7 @@ class VentanaPrincipal(QMainWindow):
     def abrir_ventana_agregar_usuario(self):
         self.ventanaAgregarUsuario = ventanaAgregarUsuario(self) #el self indica que su ventana padre es esta ventanaPrincipal
         self.ventanaAgregarUsuario.asignarCoordinador(self.__mensajero)
-        self.hide()
+        self.hide() # se oculta la ventana principal, no se cierra porque se va a volver a mostrar
         self.ventanaAgregarUsuario.show()  # Muestra la ventana de agregar usuario
         
     def asignarCoordinador(self,c):
