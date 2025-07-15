@@ -19,8 +19,8 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>30</y>
+     <x>40</x>
+     <y>60</y>
      <width>331</width>
      <height>161</height>
     </rect>
@@ -115,8 +115,8 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>200</y>
+     <x>40</x>
+     <y>230</y>
      <width>331</width>
      <height>80</height>
     </rect>
@@ -141,6 +141,25 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>0</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>logo.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

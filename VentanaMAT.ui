@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
@@ -28,7 +27,7 @@
     <widget class="QComboBox" name="comboFiltro">
      <item>
       <property name="text">
-       <string>Media Móvil</string>
+       <string>Media M&#243;vil</string>
       </property>
      </item>
      <item>
@@ -62,7 +61,7 @@
      </property>
     </widget>
    </item>
-  <item><widget class="QLabel" name="label_canalInicio"><property name="text"><string>Canal inicial:</string></property></widget></item><item><widget class="QSpinBox" name="canalInicio"><property name="minimum"><number>0</number></property><property name="maximum"><number>100</number></property></widget></item><item><widget class="QLabel" name="label_canalFin"><property name="text"><string>Canal final:</string></property></widget></item><item><widget class="QSpinBox" name="canalFin"><property name="minimum"><number>0</number></property><property name="maximum"><number>100</number></property></widget></item></layout>
+  <item><widget class="QLabel" name="label_canalInicio"><property name="text"><string>Canal inicial:</string></property></widget></item><item><widget class="QSpinBox" name="canalInicio"><property name="minimum"><number>0</number></property><property name="maximum"><number>100</number></property></widget></item><item><widget class="QLabel" name="label_canalFin"><property name="text"><string>Canal final:</string></property></widget></item><item><widget class="QSpinBox" name="canalFin"><property name="minimum"><number>0</number></property><property name="maximum"><number>100</number></property></widget></item><item><widget class="QPushButton" name="botonGraficarIntervalo"><property name="text"><string>Graficar intervalo</string></property></widget></item></layout>
  </widget>
  <resources />
  <connections />

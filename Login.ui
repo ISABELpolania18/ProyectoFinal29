@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>495</width>
-    <height>470</height>
+    <width>494</width>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,17 +123,36 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>0</y>
-      <width>321</width>
-      <height>141</height>
+      <x>70</x>
+      <y>10</y>
+      <width>341</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../../../../Downloads/image-removebg-preview (2).png</pixmap>
+     <pixmap>image-removebg-preview (2).png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>0</y>
+      <width>81</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>logo.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -145,7 +164,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>495</width>
+     <width>494</width>
      <height>26</height>
     </rect>
    </property>

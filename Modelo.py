@@ -45,6 +45,24 @@ class CSV:
     def mostrar_dataframe(self):
         return self.__dataframe
     
+    def guardar_csv(self, cursor, conexion, usuario, archivo_nombre): #Agregar aquí
+        cod_archivo = np.random.randint(1000, 99999)  
+        consulta = """
+            INSERT INTO archivos_otros 
+            (nombre_usuario, cod_archivo, tipo_archivo, nombre_archivo, fecha_archivo, ruta_archivo)
+            VALUES (%s, %s, %s, %s, CURDATE(), %s)
+        """
+        datos = (
+            usuario,
+            cod_archivo,
+            'csv',
+            archivo_nombre,
+            self.__ruta
+        )
+        cursor.execute(consulta, datos)
+        conexion.commit()
+    
+    
 class ImagenesNormales:
     def __init__(self, path=""):
         self.__path = path
@@ -90,14 +108,29 @@ class ImagenesNormales:
     def erode(self, Img, k):
         return cv2.erode(Img, np.ones((k, k), np.uint8), iterations=1)
 
-    # Avanzados
+    '''Método diferente de openCV. '.Canny()'
+    El algoritmo de detección de bordes Canny se utiliza en visión artificial para identificar bordes en una imagen.
+    Ayuda a resaltar límites importantes para tareas como la detección de objetos y la segmentación de imágene'''
     def bordes(self, Img):
         return cv2.Canny(Img, 100, 200)
+    
+    def guardar_en_bd(self, cursor, conexion, usuario, archivo_nombre): #Agregar aquí
+        cod = np.random.randint(1000, 99999)
+        ruta = self.__path
+        consulta = """
+            INSERT INTO archivos_otros 
+            (nombre_usuario, cod_archivo, tipo_archivo, nombre_archivo, fecha_archivo, ruta_archivo)
+            VALUES (%s, %s, %s, %s, CURDATE(), %s)
+        """
+        cursor.execute(consulta, (usuario, cod, 'png', archivo_nombre, ruta))
+        conexion.commit() 
+        
 
 class DICOM:
-    def __init__(self, c, m):
+    def __init__(self, c, u,contrasena):
         self.__carpeta = c
-        self.__mensajero = m
+        self.__usuario = u
+        self.__contrasena = contrasena
         self.__volumen = None
         self.__slices = []
         self.__ruta_nifti = None
@@ -115,8 +148,8 @@ class DICOM:
         #metadatos
         paciente = self.__slices[0]
         self.__datos_paciente = {
-            "usuario": self.__mensajero.vista.Usuario.text() if self.__mensajero else "Desconocido",
-            "cod_archivo": 123,  # aca no se si poner enseguida lo del usuario o generar otro
+            "usuario": self.__usuario ,
+            "cod_archivo": self.__contrasena,  # aca no se si poner enseguida lo del usuario o generar otro
             "nombre": str(paciente.get('PatientName', 'Anónimo')),
             "id": str(paciente.get('PatientID', '0')),
             "edad": str(paciente.get('PatientAge', 'NA')),
@@ -174,15 +207,24 @@ class MAT:
 
     def cargar_archivo(self, ruta):
         mat = sio.loadmat(ruta)
-        self.datos_senales = {
-            k: v.flatten()
-            for k, v in mat.items()
-            if isinstance(v, np.ndarray) and v.ndim == 2
-        }
+        self.datos_senales = {}
+
+        for k, v in mat.items():
+            if isinstance(v, np.ndarray):
+                if v.ndim == 3:
+                    # Extraer cada canal como una señal separada
+                    for canal in range(v.shape[0]):
+                        self.datos_senales[f"{k}_canal_{canal}"] = v[canal, :, :]
+                elif v.ndim == 2:
+                    self.datos_senales[k] = v
+                elif v.ndim == 1:
+                    self.datos_senales[k] = v.flatten()
+
         self.cod_archivo = np.random.randint(1000, 99999)
         self.nombre_archivo = os.path.basename(ruta)
         self.ruta_archivo = ruta
         return list(self.datos_senales.keys())
+
 
     def seleccionar_senal(self, nombre):
         self.senal_actual = self.datos_senales.get(nombre, None)
@@ -213,10 +255,8 @@ class MAT:
                 self.nombre_archivo,
                 self.ruta_archivo
             )
-            print("Datos a guardar:", datos) 
             cursor.execute(consulta, datos)
             conexion.commit()
-            print("Guardado exitosamente en BD.")
         except Exception as e:
             print("Error al guardar en la base de datos:", e)
             raise

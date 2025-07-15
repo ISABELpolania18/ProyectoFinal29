@@ -18,6 +18,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    
     <item>
      <widget class="QPushButton" name="botonCargar">
       <property name="font">
@@ -34,6 +35,7 @@
       </property>
      </widget>
     </item>
+
     <item>
      <widget class="QPushButton" name="botonGuardar">
       <property name="font">
@@ -50,6 +52,7 @@
       </property>
      </widget>
     </item>
+
     <item>
      <widget class="QComboBox" name="comboTipoGrafico">
       <property name="font">
@@ -60,8 +63,9 @@
       </property>
      </widget>
     </item>
+
     <item>
-     <layout class="QHBoxLayout">
+     <layout class="QHBoxLayout" name="layoutX">
       <item>
        <widget class="QLabel" name="labelX">
         <property name="font">
@@ -87,8 +91,9 @@
       </item>
      </layout>
     </item>
+
     <item>
-     <layout class="QHBoxLayout">
+     <layout class="QHBoxLayout" name="layoutY">
       <item>
        <widget class="QLabel" name="labelY">
         <property name="font">
@@ -114,6 +119,7 @@
       </item>
      </layout>
     </item>
+
     <item>
      <widget class="QPushButton" name="botonGraficar">
       <property name="font">
@@ -130,6 +136,7 @@
       </property>
      </widget>
     </item>
+
     <item>
      <widget class="QPushButton" name="botonEstadisticas">
       <property name="font">
@@ -146,6 +153,7 @@
       </property>
      </widget>
     </item>
+
     <item>
      <widget class="QTableWidget" name="tablaDatos">
       <property name="font">
@@ -156,9 +164,13 @@
       </property>
      </widget>
     </item>
+
     <item>
-     <layout class="QVBoxLayout" name="layoutGrafica"/>
+     <widget class="QWidget" name="widgetGrafica">
+      <layout class="QVBoxLayout" name="layoutGrafica"/>
+     </widget>
     </item>
+
     <item>
      <widget class="QPushButton" name="botonVolver">
       <property name="font">
@@ -175,6 +187,7 @@
       </property>
      </widget>
     </item>
+
    </layout>
   </widget>
  </widget>

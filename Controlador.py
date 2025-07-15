@@ -32,8 +32,38 @@ class Controlador:
         self.modelo.anadir_usuario(nombre_usuario, contrasena, rol)
         QMessageBox.information(ventana, "Éxito", "Usuario agregado correctamente.")
         ventana.close()
-        self.vista.show()  # Muestra la ventana principal nuevamente
+        self.vista.show() 
         
+    def cargar_dicom(self, carpeta):
+        usuario = self.vista.Usuario.text()
+        contrasena = self.vista.Contrasena.text()
+        self.dicom = DICOM(carpeta, usuario,contrasena)
+        self.dicom.guardar_bd(self.modelo.cursor, self.modelo.conexion)
+        return self.dicom.get_volumen() # Muestra la ventana principal nuevamente
+    
+    def guardar_en_bd(self, imagenes, usuario, archivo_nombre, vista): #es la de png
+        try:
+            imagenes.guardar_en_bd(self.modelo.cursor, self.modelo.conexion, usuario, archivo_nombre)
+            QMessageBox.information(vista, "Guardado", "Registro guardado en archivos_otros")
+        except Exception as e:
+            QMessageBox.critical(vista, "Error", str(e))
+    
+    def guardar_en_bd_csv(self, csv, usuario, archivo_nombre, vista): 
+        try:
+            csv.guardar_csv(self.modelo.cursor, self.modelo.conexion, usuario, archivo_nombre)
+            QMessageBox.information(vista, "Guardado", "Registro guardado en archivos_otros")
+        except Exception as e:
+            QMessageBox.critical(vista, "Error", str(e))
+    
+    def guardar_en_bd_mat(self, mat, vista):
+        try:
+            usuario = self.modelo.usuario_actual if hasattr(self.modelo, 'usuario_actual') else self.vista.Usuario.text()
+            mat.guardar_en_bd(self.modelo.cursor, self.modelo.conexion, usuario)
+            QMessageBox.information(vista, "Éxito", "Archivo .mat guardado en la base de datos.")
+        except Exception as e:
+            import traceback
+            print(traceback.format_exc())
+            QMessageBox.critical(vista, "Error", f"Error al guardar en la BD: {str(e)}")
     
 def main():
     app = QApplication(sys.argv)

@@ -119,6 +119,8 @@ class ventana_Imagenes(QDialog):
         self.__mensajero = c
         
 
+
+
 class VentanaCSV(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -127,7 +129,6 @@ class VentanaCSV(QMainWindow):
         self.setWindowTitle("Graficador CSV")
         self.csv = CSV()
         self.setup()
-
 
     def setup(self):
         self.comboTipoGrafico.addItems(["plot", "scatter", "boxplot"])
@@ -161,28 +162,6 @@ class VentanaCSV(QMainWindow):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"No se pudo cargar el archivo: {e}")
 
-    def guardar_en_bd(self):
-        try:
-            consulta = """
-                INSERT INTO archivos_otros 
-                (nombre_usuario, cod_archivo, tipo_archivo, nombre_archivo, fecha_archivo, ruta_archivo)
-                VALUES (%s, %s, %s, %s, CURDATE(), %s)
-            """
-            cursor = self.__mensajero.modelo.cursor
-            datos = (
-                self.nombre_usuario,
-                self.cod_archivo,
-                'csv',
-                self.nombre_archivo,
-                self.ruta_archivo
-            )
-            cursor.execute(consulta, datos)
-            self.__mensajero.modelo.conexion.commit()
-            QMessageBox.information(self, "Éxito", "Archivo CSV guardado en la base de datos.")
-            self.botonGuardar.setEnabled(False)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo guardar en la base de datos: {e}")
-
     def llenar_tabla(self, df):
         self.tablaDatos.setRowCount(len(df))
         self.tablaDatos.setColumnCount(len(df.columns))
@@ -193,14 +172,15 @@ class VentanaCSV(QMainWindow):
                 self.tablaDatos.setItem(i, j, QtWidgets.QTableWidgetItem(str(df.iat[i, j])))
 
     def mostrar_grafica_en_widget(self, figura):
-        for i in reversed(range(self.widgetGrafica.layout().count())):
-            widget = self.widgetGrafica.layout().itemAt(i).widget()
+        # Limpia la gráfica anterior
+        for i in reversed(range(self.layoutGrafica.count())):
+            widget = self.layoutGrafica.itemAt(i).widget()
             if widget:
                 widget.setParent(None)
 
+        # Crea un nuevo lienzo de Matplotlib y lo agrega
         canvas = FigureCanvas(figura)
-        self.widgetGrafica.layout().addWidget(canvas)
-        canvas.draw()
+        self.layoutGrafica.addWidget(canvas)
 
     def graficar(self):
         tipo = self.comboTipoGrafico.currentText()
@@ -210,6 +190,10 @@ class VentanaCSV(QMainWindow):
         df = self.csv.mostrar_dataframe()
         if df is None:
             QMessageBox.warning(self, "Error", "No hay archivo cargado.")
+            return
+
+        if columna_x not in df.columns or (columna_y and columna_y not in df.columns):
+            QMessageBox.warning(self, "Error", "Columnas seleccionadas inválidas.")
             return
 
         figura = Figure()
@@ -258,14 +242,15 @@ class VentanaCSV(QMainWindow):
 
         QMessageBox.information(self, "Estadísticas", estadisticas)
 
-    def asignarCoordinador(self, c):
-        self.__mensajero = c
+    def guardar_en_bd(self):
+        self.__mensajero.guardar_en_bd_csv(self.csv, self.nombre_usuario, self.nombre_archivo, self) 
 
     def volver_a_senales(self):
-        #se oculta la ventana actual y se muestra la ventana principal
-        self.close() #no se va a volver a mostrar la ventana de CSV por eso se cierra completamente
+        self.close()
         self.__ventana_principal.show()
 
+    def asignarCoordinador(self, c):
+        self.__mensajero = c
 
 class Ventana_MAT(QDialog):
     def __init__(self, parent=None):
@@ -282,10 +267,12 @@ class Ventana_MAT(QDialog):
         self.botonFiltrar.clicked.connect(self.aplicar_filtro)
         self.botonGuardar.clicked.connect(self.guardar_bd)
         self.botonVolver.clicked.connect(self.volver)
+        self.botonGraficarIntervalo.clicked.connect(self.graficar_intervalo)
 
         self.canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.layout_grafico.addWidget(self.canvas)
         self.ax = self.canvas.figure.subplots()
+        
 
     def asignarCoordinador(self, c):
         self.__mensajero = c
@@ -297,16 +284,33 @@ class Ventana_MAT(QDialog):
                 señales = self.mat.cargar_archivo(ruta)
                 self.comboSenales.clear()
                 self.comboSenales.addItems(señales)
-                if señales:
-                    array = self.mat.datos_senales[señales[0]]
-                    if isinstance(array, np.ndarray) and array.ndim == 2:
-                        self.canalInicio.setMaximum(array.shape[0] - 1)
-                        self.canalFin.setMaximum(array.shape[0] - 1)
 
+                if señales:
+                    # Seleccionar la primera señal y actualizar gráfica
+                    self.comboSenales.setCurrentIndex(0)
+                    self.mat.senal_actual = self.mat.datos_senales[señales[0]]
+                    self.actualizar_grafica()
+
+                    array = self.mat.datos_senales[señales[0]]
+                    if isinstance(array, np.ndarray):
+                        if array.ndim == 3:
+                            self.canalInicio.setMaximum(array.shape[0] - 1)
+                            self.canalFin.setMaximum(array.shape[0] - 1)
+                            
+                        elif array.ndim == 2:
+                            self.canalInicio.setMaximum(array.shape[0] - 1)
+                            self.canalFin.setMaximum(array.shape[0] - 1)
+                            
+                        elif array.ndim == 1:
+                            self.canalInicio.setMaximum(0)
+                            self.canalFin.setMaximum(len(array) - 1)
+                           
                 self.mat.nombre_usuario = self.__mensajero.vista.Usuario.text()
                 QMessageBox.information(self, "Éxito", "Archivo cargado correctamente.")
+
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"No se pudo cargar el archivo: {e}")
+
 
     def actualizar_grafica(self):
         nombre = self.comboSenales.currentText()
@@ -316,36 +320,53 @@ class Ventana_MAT(QDialog):
             QMessageBox.warning(self, "Error", "La llave seleccionada no contiene un arreglo válido.")
             return
 
-        self.ax.clear()
+        canal = self.canalInicio.value() if hasattr(self, "canalInicio") else 0
+        ensayo = self.canalFin.value() if hasattr(self, "canalFin") else 0
 
-        if senal.ndim == 1:
-            self.ax.plot(senal, label="Señal 1D")
-            self.ax.set_title(f"Señal: {nombre}")
-            self.ax.set_xlabel("Muestras")
-            self.ax.set_ylabel("Amplitud")
-            self.ax.legend()
-            self.canvas.draw()
-
-        elif senal.ndim == 2:
-            inicio = self.canalInicio.value()
-            fin = self.canalFin.value()
-
-            if inicio < 0 or fin >= senal.shape[0] or inicio > fin:
-                QMessageBox.warning(self, "Error", f"Rango inválido. El arreglo tiene {senal.shape[0]} canales.")
+        try:
+            if senal.ndim == 3:
+                senal = senal[canal, :, ensayo]
+            elif senal.ndim == 2:
+                senal = senal[canal, :]
+            elif senal.ndim == 1:
+                senal = senal
+            else:
+                QMessageBox.warning(self, "Error", "No se puede graficar este tipo de dato.")
                 return
 
-            for i in range(inicio, fin + 1):
-                self.ax.plot(senal[i], label=f"Canal {i}")
-
-            self.ax.set_title(f"Señales de '{nombre}' (canales {inicio}-{fin})")
-            self.ax.set_xlabel("Muestras")
-            self.ax.set_ylabel("Amplitud")
+            self.mat.senal_actual = senal  # para filtro
+            self.ax.clear()
+            self.ax.plot(senal, label=f"{nombre}")
+            self.ax.set_title(f"Señal: {nombre} [canal {canal}, ensayo {ensayo}]")
+            self.ax.set_xlabel("Índice")
+            self.ax.set_ylabel("Valor")
             self.ax.legend()
             self.canvas.draw()
 
-        else:
-            QMessageBox.warning(self, "Error", "El arreglo tiene más de 2 dimensiones. No se puede graficar.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo graficar la señal: {e}")
+       
+    
+    def graficar_intervalo(self):
+        if self.mat.senal_actual is None:
+            QMessageBox.warning(self, "Error", "Debe cargar y visualizar una señal primero.")
+            return
 
+        inicio = self.canalInicio.value()
+        fin = self.canalFin.value()
+        senal = self.mat.senal_actual
+
+        if inicio < 0 or fin >= len(senal) or inicio >= fin:
+            QMessageBox.warning(self, "Error", "Rango fuera de los límites de la señal.")
+            return
+
+        self.ax.clear()
+        self.ax.plot(range(inicio, fin), senal[inicio:fin])
+        self.ax.set_title(f"Señal ({inicio}-{fin})")
+        self.ax.set_xlabel("Índice")
+        self.ax.set_ylabel("Valor")
+        self.ax.legend([self.comboSenales.currentText()])
+        self.canvas.draw()
 
     def aplicar_filtro(self):
         tipo = self.comboFiltro.currentText()
@@ -364,12 +385,7 @@ class Ventana_MAT(QDialog):
 
     def guardar_bd(self):
         try:
-            self.mat.guardar_en_bd(
-                self.__mensajero.modelo.cursor,
-                self.__mensajero.modelo.conexion,
-                self.__mensajero.vista.Usuario.text()
-            )
-            QMessageBox.information(self, "Éxito", "Archivo .mat guardado en la base de datos.")
+            self.__mensajero.guardar_en_bd_mat(self.mat, self)  # Solo se delega al controlador
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo guardar en la base de datos: {e}")
 
@@ -445,20 +461,17 @@ class Ventana_DICOM(QDialog):
 
     def cargar_dicom(self):
         carpeta = QFileDialog.getExistingDirectory(self, "Seleccionar carpeta")
-        if carpeta:
-            self.dicom = DICOM(carpeta, self.__mensajero)
-            self.volumen3D = self.dicom.get_volumen()
+        self.volumen3D = self.__mensajero.cargar_dicom(carpeta)
 
-            self.slider_axial.setMaximum(self.volumen3D.shape[0] - 1)
-            self.slider_coronal.setMaximum(self.volumen3D.shape[1] - 1)
-            self.slider_sagital.setMaximum(self.volumen3D.shape[2] - 1)
+        self.slider_axial.setMaximum(self.volumen3D.shape[0] - 1)
+        self.slider_coronal.setMaximum(self.volumen3D.shape[1] - 1)
+        self.slider_sagital.setMaximum(self.volumen3D.shape[2] - 1)
 
-            self.slider_axial.setValue(self.volumen3D.shape[0] // 2)
-            self.slider_coronal.setValue(self.volumen3D.shape[1] // 2)
-            self.slider_sagital.setValue(self.volumen3D.shape[2] // 2)
+        self.slider_axial.setValue(self.volumen3D.shape[0] // 2)
+        self.slider_coronal.setValue(self.volumen3D.shape[1] // 2)
+        self.slider_sagital.setValue(self.volumen3D.shape[2] // 2)
 
-            self.dicom.guardar_bd(self.__mensajero.modelo.cursor, self.__mensajero.modelo.conexion)
-            QMessageBox.information(self, "Éxito", "Datos guardados en base de datos")
+        QMessageBox.information(self, "Éxito", "Datos guardados en base de datos")
                
 class MyGraphCanvas(FigureCanvas):
     def __init__(self, width=5, height=4, dpi=100):
@@ -563,29 +576,7 @@ class Ventana_PNG(QDialog):
         self.canvas.graficar_imagen(self.img_resultado, cmap=cmap)
 
     def guardar_resultado(self):
-        if self.img_resultado is None:
-            QMessageBox.warning(self, "Error", "No hay imagen procesada para guardar.")
-            return
-
-        try:
-            consulta = """
-                INSERT INTO archivos_otros 
-                (nombre_usuario, cod_archivo, tipo_archivo, nombre_archivo, fecha_archivo, ruta_archivo)
-                VALUES (%s, %s, %s, %s, CURDATE(), %s)
-            """
-            cursor = self.__mensajero.modelo.cursor
-            datos = (
-                self.nombre_usuario,
-                np.random.randint(1000, 99999),
-                'png',
-                self.nombre_archivo,
-                self.imagenes.getPath()
-            )
-            cursor.execute(consulta, datos)
-            self.__mensajero.modelo.conexion.commit()
-            QMessageBox.information(self, "Guardado", "Registro guardado en archivos_otros")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
+        self.__mensajero.guardar_en_bd(self.imagenes, self.nombre_usuario, self.nombre_archivo, self)
 
     def volver(self):
         self.close()
